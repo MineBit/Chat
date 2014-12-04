@@ -18,20 +18,15 @@ import java.awt.Font;
 
 public class MainFrame {
 	
-	private static MainFrame window;
 	private static JFrame frmBrainchat;
 	private JTextField MessageField;
 
 	//Метод для запуска окна:
 	public static void View() {
 		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					window = new MainFrame();
-					window.frmBrainchat.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			public void run(){
+				new MainFrame();
+				MainFrame.frmBrainchat.setVisible(true);
 			}
 		});
 	}
