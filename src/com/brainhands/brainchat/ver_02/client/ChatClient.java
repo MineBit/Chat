@@ -13,7 +13,7 @@ import java.io.*;
 */
 
 public class ChatClient {
-	final public static String Version = "0.1.2S";
+	final public static String Version = "0.2";
 	final public static String BuilDVersion = "0033";
 	final Socket s; // это будет сокет для сервера
 	final BufferedReader socketReader; // буферизированный читатель с сервера
