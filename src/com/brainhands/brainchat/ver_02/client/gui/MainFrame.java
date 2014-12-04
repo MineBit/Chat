@@ -12,6 +12,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+import com.brainhands.brainchat.utill.Other;
 import com.brainhands.brainchat.ver_02.client.ChatClient;
 
 import java.awt.Font;
@@ -41,7 +42,9 @@ public class MainFrame {
 		frmBrainchat.setResizable(false);
 		frmBrainchat.setBounds(100, 100, 450, 300);
 		frmBrainchat.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
+		Other.initSystemLookAndFeel();
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);

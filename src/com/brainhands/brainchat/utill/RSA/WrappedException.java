@@ -3,11 +3,14 @@ package com.brainhands.brainchat.utill.RSA;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 /**
- * @author: moxa
+ * @author: Moxa
  * Date: 3/24/13
  */
 public class WrappedException extends RuntimeException {
-    private Throwable cause;
+	
+	private static final long serialVersionUID = 1L;
+	
+	private Throwable cause;
     public WrappedException(Throwable cause) {
         this.cause = cause;
     }

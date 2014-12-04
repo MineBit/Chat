@@ -17,6 +17,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
+import com.brainhands.brainchat.utill.Other;
 import com.brainhands.brainchat.ver_02.client.ChatClient;
 
 public class NewRoomFrame extends JFrame {
@@ -50,6 +51,8 @@ public class NewRoomFrame extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+
+		Other.initSystemLookAndFeel();
 		
 		JLabel Label_1 = new JLabel("Введите номер комнаты:");
 		Label_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
