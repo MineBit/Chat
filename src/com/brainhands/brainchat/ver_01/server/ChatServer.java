@@ -95,7 +95,7 @@ public class ChatServer {
 	*/
 
 	public static void main(String[] args) throws IOException {
-		System.out.println("Brain Chat Sever |0.1| by Brain Hands");
+		System.out.println("Brain Chat Sever |0.1.1S| by Brain Hands");
 		new ChatServer(45000).run(); // если сервер не создался, программа
 		// вылетит по эксепшену, и метод run() не запуститься
 	}
@@ -157,8 +157,8 @@ public class ChatServer {
 		*/
 
 		public synchronized void send(String line) {
-			try {
-				bw.write(Crypto.Recripting(line)); // пишем строку
+			try{
+				bw.write(Crypto.Cripting(Crypto.Recripting(line))); // пишем строку
 				bw.write("\n"); // пишем перевод строки
 				bw.flush(); // отправляем
 			} catch (IOException e) {

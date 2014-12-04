@@ -189,7 +189,6 @@ public class Crypto {
                 }
             }
         }
-        System.out.println(" Шифр: "+returner);
         return returner;
     }
 

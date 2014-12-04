@@ -13,15 +13,15 @@ import java.io.*;
 */
 
 public class ChatClient {
-	final String Version = "0.1.1";
-	final String BuilDVersion = "0032";
+	final public static String Version = "0.1.2S";
+	final public static String BuilDVersion = "0033";
 	final Socket s; // это будет сокет для сервера
 	final BufferedReader socketReader; // буферизированный читатель с сервера
 	final BufferedWriter socketWriter; // буферизированный писатель на сервер
 	final BufferedReader userInput; // буферизированный читатель пользовательского ввода с консоли
 	
 	public static String nickname = "User";
-	public static String host = "151.248.114.3";
+	public static String host = "127.0.0.1";
 	
 	/**
 	* Конструктор объекта клиента
@@ -58,8 +58,8 @@ public class ChatClient {
 				break; // до этого break мы не дойдем, но стоит он, чтобы компилятор не ругался
 			} else { //...иначе...
 				try {
-					String Crypted_String = Crypto.Cripting(userString);
-					socketWriter.write("["+get_time()+"] "+nickname+": "+Crypted_String); //пишем строку пользователя
+					String Crypted_String = Crypto.Cripting("["+get_time()+"] "+nickname+": "+userString);
+					socketWriter.write(Crypted_String); //пишем строку пользователя
 					socketWriter.write("\n"); //добавляем "новою строку", дабы readLine() сервера сработал
 					socketWriter.flush(); // отправляем
 				} catch (IOException e) {
@@ -86,7 +86,8 @@ public class ChatClient {
 	}
  
 	public static void main(String[] args) { // входная точка программы
-		System.out.println("Brain Chat | 0.1 | by Brain Hands");
+		System.out.println("Brain Chat | "+Version+"| by Brain Hands");
+		System.out.println("Build: " + BuilDVersion);
 		System.out.println("Welcome to Chat!");
 		System.out.println("Enter your nickname:");
 		
@@ -138,7 +139,7 @@ public class ChatClient {
 					System.out.println("Server close connection!");
 					close(); // ...закрываемся
 				} else { // иначе печатаем то, что прислал сервер.
-					System.out.println(">>" + line);
+					System.out.println(">>" + Crypto.Recripting(line));
 				}
 			}
 		}
