@@ -56,17 +56,17 @@ public class MainFrame {
 		
 		JButton SendButton = new JButton("Отправить");
 		
-		JLabel lblNewLabel = new JLabel("Пользователей онлайн:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		JLabel Online_lb = new JLabel("Пользователей онлайн:");
+		Online_lb.setFont(new Font("Tahoma", Font.BOLD, 11));
 		
-		JLabel lblNewLabel_1 = new JLabel("0");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 11));
+		JLabel OnlineStatString = new JLabel("0");
+		OnlineStatString.setFont(new Font("Tahoma", Font.BOLD, 11));
 		
-		JButton button = new JButton("Создать комнату");
+		JButton NewRoomButton = new JButton("Создать комнату");
 		
-		JButton button_1 = new JButton("Подключиться");
+		JButton ConnectButton = new JButton("Подключиться");
 		
-		JButton btnNewButton = new JButton("Настройки");
+		JButton SettingsButton = new JButton("Настройки");
 		GroupLayout groupLayout = new GroupLayout(frmBrainchat.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -79,16 +79,16 @@ public class MainFrame {
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(lblNewLabel)
+							.addComponent(Online_lb)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblNewLabel_1))
+							.addComponent(OnlineStatString))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(61)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(button)
+								.addComponent(NewRoomButton)
 								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-									.addComponent(btnNewButton, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addComponent(button_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)))))
+									.addComponent(SettingsButton, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(ConnectButton, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)))))
 					.addContainerGap(64, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
@@ -99,14 +99,14 @@ public class MainFrame {
 						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 195, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblNewLabel)
-								.addComponent(lblNewLabel_1))
+								.addComponent(Online_lb)
+								.addComponent(OnlineStatString))
 							.addGap(10)
-							.addComponent(button)
+							.addComponent(NewRoomButton)
 							.addGap(13)
-							.addComponent(button_1)
+							.addComponent(ConnectButton)
 							.addGap(12)
-							.addComponent(btnNewButton)))
+							.addComponent(SettingsButton)))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(MessageField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
