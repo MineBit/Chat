@@ -1,11 +1,13 @@
 package com.brainhands.brainchat.ver_02.server;
 
+import com.brainhands.brainchat.utill.Crypto;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.io.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
- 
+
 /**
 * Класс сервера. Сидит тихо на порту, принимает сообщение, создает SocketProcessor на каждое сообщение
 */
@@ -21,14 +23,14 @@ public class ChatServer {
 	/**
 	 * Конструктор объекта сервера
 	 * @param port Порт, где будем слушать входящие сообщения.
-	 * @throws IOException Если не удасться создать сервер-сокет, вылетит по эксепшену, объект Сервера не будет создан
+	 * @throws java.io.IOException Если не удасться создать сервер-сокет, вылетит по эксепшену, объект Сервера не будет создан
 	 */
 
 	public ChatServer(int port) throws IOException {
 		ss = new ServerSocket(port); // создаем сервер-сокет
 		this.port = port; // сохраняем порт.
 	}
- 
+
 	/**
 	* главный цикл прослушивания/ожидания коннекта.
 	*/
@@ -54,7 +56,7 @@ public class ChatServer {
 			}
 		}
 	}
- 
+
 	/**
 	* Ожидает новое подключение.
 	* @return Сокет нового подключения
@@ -69,12 +71,12 @@ public class ChatServer {
 		}
 		return s;
 	}
- 
+
 	/**
 	* метод "глушения" сервера
 	*/
 
-	private synchronized void shutdownServer() {	
+	private synchronized void shutdownServer() {
 		// обрабатываем список рабочих коннектов, закрываем каждый
 		for (SocketProcessor s: q) {
 			s.close();
@@ -85,32 +87,32 @@ public class ChatServer {
 			} catch (IOException ignored) {}
 		}
 	}
- 
+
 	/**
 	* входная точка программы
 	* @param args
-	* @throws IOException
+	* @throws java.io.IOException
 	*/
 
 	public static void main(String[] args) throws IOException {
-		System.out.println("Brain Chat Sever |0.1| by Brain Hands");
-		new ChatServer(15000).run(); // если сервер не создался, программа
+		System.out.println("Brain Chat Sever |0.1.1S| by Brain Hands");
+		new ChatServer(45000).run(); // если сервер не создался, программа
 		// вылетит по эксепшену, и метод run() не запуститься
 	}
- 
+
 	/**
 	* вложенный класс асинхронной обработки одного коннекта.
 	*/
-	
+
 	private class SocketProcessor implements Runnable{
 		Socket s; // наш сокет
 		BufferedReader br; // буферизировнный читатель сокета
 		BufferedWriter bw; // буферизированный писатель в сокет
- 
+
 		/**
 		* Сохраняем сокет, пробуем создать читателя и писателя. Если не получается - вылетаем без создания объекта
 		* @param socketParam сокет
-		* @throws IOException Если ошибка в создании br || bw
+		* @throws java.io.IOException Если ошибка в создании br || bw
 		*/
 
 		SocketProcessor(Socket socketParam) throws IOException {
@@ -155,8 +157,9 @@ public class ChatServer {
 		*/
 
 		public synchronized void send(String line) {
-			try {
-				bw.write(line); // пишем строку
+			try{
+				bw.write(Crypto.Cripting(Crypto.Recripting(line))); // пишем строку
+				bw.write("\n"); // пишем перевод строки
 				bw.flush(); // отправляем
 			} catch (IOException e) {
 				close(); //если глюк в момент отправки - закрываем данный сокет.

@@ -2,12 +2,12 @@ package com.brainhands.brainchat.ver_01.client;
 
 import com.brainhands.brainchat.utill.Crypto;
 
+import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-import java.io.*;
- 
+
 /**
 * Класс-клиент чат-сервера. Работает в консоли. Командой с консоли shutdown посылаем сервер в оффлайн
 */
@@ -58,7 +58,7 @@ public class ChatClient {
 				break; // до этого break мы не дойдем, но стоит он, чтобы компилятор не ругался
 			} else { //...иначе...
 				try {
-					String Crypted_String = Crypto.Cripting("["+get_time()+"] "+nickname+": "+userString);
+					String Crypted_String = Crypto.Cripting("[" + get_time() + "] " + nickname + ": " + userString);
 					socketWriter.write(Crypted_String); //пишем строку пользователя
 					socketWriter.write("\n"); //добавляем "новою строку", дабы readLine() сервера сработал
 					socketWriter.flush(); // отправляем

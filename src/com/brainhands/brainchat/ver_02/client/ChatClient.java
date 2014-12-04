@@ -1,8 +1,7 @@
 package com.brainhands.brainchat.ver_02.client;
 
-import com.brainhands.brainchat.ver_02.client.frames.StartFrame;
+import com.brainhands.brainchat.utill.Crypto;
 
-import javax.swing.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,11 +13,15 @@ import java.io.*;
 */
 
 public class ChatClient {
+	final public static String Version = "0.1.2S";
+	final public static String BuilDVersion = "0033";
 	final Socket s; // это будет сокет для сервера
 	final BufferedReader socketReader; // буферизированный читатель с сервера
 	final BufferedWriter socketWriter; // буферизированный писатель на сервер
+	final BufferedReader userInput; // буферизированный читатель пользовательского ввода с консоли
+	
 	public static String nickname = "User";
-	public static String host = "127.0.0.1"; //TODO При продакшине поменять локалхост на ip сервера
+	public static String host = "127.0.0.1";
 	
 	/**
 	* Конструктор объекта клиента
@@ -32,7 +35,9 @@ public class ChatClient {
 		s = new Socket(host, port); // создаем сокет
 		// создаем читателя и писателя в сокет с дефолной кодировкой UTF-8
 		socketReader = new BufferedReader(new InputStreamReader(s.getInputStream(), "UTF-8"));
-		socketWriter = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"));;
+		socketWriter = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"));
+		// создаем читателя с консоли (от пользователя)
+		userInput = new BufferedReader(new InputStreamReader(System.in));
 		new Thread(new Receiver()).start();// создаем и запускаем нить асинхронного чтения из сокета
 	}
  
@@ -41,29 +46,28 @@ public class ChatClient {
 	*/
 	
 	public void run() {
-		System.out.println("Напишите что-нибудь, чтобы отправить (Для выхода зажмите Enter):");
+		System.out.println("Write for send (For exit press Enter):");
 		while (true) {
 			String userString = null;
+			try {
+				userString = userInput.readLine(); // читаем строку от пользователя
+			} catch (IOException ignored) {} // с консоли эксепшена не может быть в принципе, игнорируем
+			//если что-то не так или пользователь просто нажал Enter...
+			if (userString == null || userString.length() == 0 || s.isClosed()) {
+				close(); // ...закрываем коннект.
+				break; // до этого break мы не дойдем, но стоит он, чтобы компилятор не ругался
+			} else { //...иначе...
 				try {
-					socketWriter.write(userString); //пишем строку пользователя
+					String Crypted_String = Crypto.Cripting("[" + get_time() + "] " + nickname + ": " + userString);
+					socketWriter.write(Crypted_String); //пишем строку пользователя
+					socketWriter.write("\n"); //добавляем "новою строку", дабы readLine() сервера сработал
 					socketWriter.flush(); // отправляем
 				} catch (IOException e) {
 					close(); // в любой ошибке - закрываем.
+				}
 			}
 		}
 	}
-    public void SendToServer() {
-        System.out.println("Напишите что-нибудь, чтобы отправить (Для выхода зажмите Enter):");
-        while (true) {
-            String userString = null;
-            try {
-                socketWriter.write(userString); //пишем строку пользователя
-                socketWriter.flush(); // отправляем
-            } catch (IOException e) {
-                close(); // в любой ошибке - закрываем.
-            }
-        }
-    }
 
 	/**
 	* метод закрывает коннект и выходит из
@@ -82,27 +86,32 @@ public class ChatClient {
 	}
  
 	public static void main(String[] args) { // входная точка программы
-
-        try {
-            new Connection(host, 15000); // Пробуем приконнетиться...
-
-           // Connection.SendToServer(); //TODO Отправка первичного сообщения иницилизации
-        } catch (IOException e) { // если объект не создан...
-            System.out.println("Невозможно соединиться. Сервер запущен?"); // сообщаем...
-        }
-        //Запуск стартового окна входа:
-		StartFrame.run();
-
+		System.out.println("Brain Chat | "+Version+"| by Brain Hands");
+		System.out.println("Build: " + BuilDVersion);
+		System.out.println("Welcome to Chat!");
+		System.out.println("Enter your nickname:");
+		
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
 		nickname = input.next();
-
-
+		
+		System.out.println("Use default server [1], or use server ip[2]?");
+		@SuppressWarnings("resource")
+		Scanner input2 = new Scanner(System.in);
+		String in_string = input2.next();
+		if(Integer.parseInt(in_string) == 2){
+			System.out.println("Type server ip:");
+			@SuppressWarnings("resource")
+			Scanner input3 = new Scanner(System.in);
+			host = input3.next();
+		}
+		try {
+			new ChatClient(host, 45000).run(); // Пробуем приконнетиться...
+		} catch (IOException e) { // если объект не создан...
+			System.out.println("Connected Error!"); // сообщаем...
+		}
 	}
-
-    public static void SetUpConnect(String host, int port){
-
-    }
+ 
 	/**
 	* Вложенный приватный класс асинхронного чтения
 	*/
@@ -123,14 +132,14 @@ public class ChatClient {
 					if ("Socket closed".equals(e.getMessage())) {
 						break;
 					}
-					System.out.println("Соединение потеряно!"); // а сюда мы попадем в случае ошибок сети.
+					System.out.println("Connected Error!"); // а сюда мы попадем в случае ошибок сети.
 					close(); // ну и закрываем сокет (кстати, вызвается метод класса ChatClient, есть доступ)
 				}
 				if (line == null) { // строка будSuет null если сервер прикрыл коннект по своей инициативе, сеть работает
-					System.out.println("Сервер зарыл соединетние!");
+					System.out.println("Server close connection!");
 					close(); // ...закрываемся
 				} else { // иначе печатаем то, что прислал сервер.
-					System.out.println(">>" + line);
+					System.out.println(">>" + Crypto.Recripting(line));
 				}
 			}
 		}
