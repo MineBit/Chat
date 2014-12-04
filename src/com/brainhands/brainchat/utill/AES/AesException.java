@@ -1,4 +1,4 @@
-package com.brainhands.brainchat.test.AES;
+package com.brainhands.brainchat.utill.AES;
 
 /**
  * Created by Василевский on 04.12.2014.

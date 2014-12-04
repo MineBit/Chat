@@ -1,4 +1,4 @@
-package com.brainhands.brainchat.test.AES;
+package com.brainhands.brainchat.utill.AES;
 
 /**
  * Created by Василевский on 04.12.2014.
@@ -14,7 +14,7 @@ import javax.xml.bind.DatatypeConverter;
 
 public class AesCrypt {
 
-    byte [] seed;
+    static byte  [] seed;
 
     public AesCrypt(String password) {
         seed = password.getBytes();
@@ -24,7 +24,7 @@ public class AesCrypt {
         seed = password;
     }
 
-    public String encrypt(String cleartext) throws AesException {
+    public static String encrypt(String cleartext) throws AesException {
         try {
             byte[] rawKey = getRawKey(seed);
             byte[] result = new byte[0];
@@ -43,7 +43,7 @@ public class AesCrypt {
         }
     }
 
-    public String decrypt(String encrypted) throws AesException {
+    public static String decrypt(String encrypted) throws AesException {
         byte[] rawKey = new byte[0];
         try {
             rawKey = getRawKey(seed);
