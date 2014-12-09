@@ -1,5 +1,7 @@
 package com.brainhands.brainchat.ver_02.client.gui;
 
+import com.brainhands.brainchat.utill.Other;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -44,7 +46,8 @@ public class ChatFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
-		
+
+		Other.initSystemLookAndFeel();
 		JPanel TopPanel = new JPanel();
 		contentPane.add(TopPanel, BorderLayout.NORTH);
 		

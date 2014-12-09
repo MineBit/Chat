@@ -13,15 +13,16 @@ import java.io.*;
 */
 
 public class ChatClient {
-	final public static String Version = "0.2";
-	final public static String BuilDVersion = "0033";
+
+	final public static String Version = "0.2"; // Переменная хранит в себе версию чата
+	final public static String BuilDVersion = "0033"; // Переменная содержит номер сборки
 	final Socket s; // это будет сокет для сервера
 	final BufferedReader socketReader; // буферизированный читатель с сервера
 	final BufferedWriter socketWriter; // буферизированный писатель на сервер
 	final BufferedReader userInput; // буферизированный читатель пользовательского ввода с консоли
 	
-	public static String nickname = "User";
-	public static String host = "127.0.0.1";
+	public static String nickname = "User"; //Дефолтное значение для имени пользователя
+	public static String host = "127.0.0.1"; //Дефолтное значение хоста TODO перед выпуском заменить на ip сервера
 	
 	/**
 	* Конструктор объекта клиента
@@ -46,7 +47,7 @@ public class ChatClient {
 	*/
 	
 	public void run() {
-		System.out.println("Write for send (For exit press Enter):");
+		//System.out.println("Write for send (For exit press Enter):");
 		while (true) {
 			String userString = null;
 			try {
