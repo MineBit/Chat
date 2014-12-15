@@ -1,12 +1,13 @@
 package com.brainhands.brainchat.ver_02.client;
 
 import com.brainhands.brainchat.utill.Crypto;
+import com.brainhands.brainchat.ver_02.client.gui.StartFrame;
 
+import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-import java.io.*;
  
 /**
 * Класс-клиент чат-сервера. Работает в консоли. Командой с консоли shutdown посылаем сервер в оффлайн
@@ -15,14 +16,13 @@ import java.io.*;
 public class ChatClient {
 
 	final public static String Version = "0.2"; // Переменная хранит в себе версию чата
-	final public static String BuilDVersion = "0033"; // Переменная содержит номер сборки
+	final public static String BuilDVersion = "0034"; // Переменная содержит номер сборки
+	public static String nickname = "User"; //Дефолтное значение для имени пользователя
+	public static String host = "127.0.0.1"; //Дефолтное значение хоста TODO перед выпуском заменить на ip сервера
 	final Socket s; // это будет сокет для сервера
 	final BufferedReader socketReader; // буферизированный читатель с сервера
 	final BufferedWriter socketWriter; // буферизированный писатель на сервер
 	final BufferedReader userInput; // буферизированный читатель пользовательского ввода с консоли
-	
-	public static String nickname = "User"; //Дефолтное значение для имени пользователя
-	public static String host = "127.0.0.1"; //Дефолтное значение хоста TODO перед выпуском заменить на ip сервера
 	
 	/**
 	* Конструктор объекта клиента
@@ -41,18 +41,54 @@ public class ChatClient {
 		userInput = new BufferedReader(new InputStreamReader(System.in));
 		new Thread(new Receiver()).start();// создаем и запускаем нить асинхронного чтения из сокета
 	}
+
+	public static void main(String[] args) { // входная точка программы
+		StartFrame.View();
+		System.out.println("Brain Chat | " + Version + "| by Brain Hands");
+		System.out.println("Build: " + BuilDVersion);
+		System.out.println("Welcome to Chat!");
+		System.out.println("Enter your nickname:");
+
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
+		nickname = input.next();
+
+		System.out.println("Use default server [1], or use server ip[2]?");
+		@SuppressWarnings("resource")
+		Scanner input2 = new Scanner(System.in);
+		String in_string = input2.next();
+		if (Integer.parseInt(in_string) == 2) {
+			System.out.println("Type server ip:");
+			@SuppressWarnings("resource")
+			Scanner input3 = new Scanner(System.in);
+			host = input3.next();
+		}
+		try {
+			new ChatClient(host, 45000).run(); // Пробуем приконнетиться...
+		} catch (IOException e) { // если объект не создан...
+			System.out.println("Connected Error!"); // сообщаем...
+		}
+	}
+
+	public static String get_time() {
+		Date d = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+		String returner = format.format(d);
+		return returner;
+	}
  
 	/**
-	* метод, где происходит главный цикл чтения сообщений с консоли и отправки на сервер
+	 * метод, где происходит главный цикл чтения сообщений с консоли и отправки на сервер
 	*/
-	
+
 	public void run() {
 		//System.out.println("Write for send (For exit press Enter):");
 		while (true) {
 			String userString = null;
 			try {
 				userString = userInput.readLine(); // читаем строку от пользователя
-			} catch (IOException ignored) {} // с консоли эксепшена не может быть в принципе, игнорируем
+			} catch (IOException ignored) {
+			} // с консоли эксепшена не может быть в принципе, игнорируем
 			//если что-то не так или пользователь просто нажал Enter...
 			if (userString == null || userString.length() == 0 || s.isClosed()) {
 				close(); // ...закрываем коннект.
@@ -71,9 +107,9 @@ public class ChatClient {
 	}
 
 	/**
-	* метод закрывает коннект и выходит из
-	* программы (это единственный выход прервать работу BufferedReader.readLine(), на ожидании пользователя)
-	*/
+	 * метод закрывает коннект и выходит из
+	 * программы (это единственный выход прервать работу BufferedReader.readLine(), на ожидании пользователя)
+	 */
 
 	public synchronized void close() {//метод синхронизирован, чтобы исключить двойное закрытие.
 		if (!s.isClosed()) { // проверяем, что сокет не закрыт...
@@ -85,38 +121,11 @@ public class ChatClient {
 			}
 		}
 	}
- 
-	public static void main(String[] args) { // входная точка программы
-		System.out.println("Brain Chat | "+Version+"| by Brain Hands");
-		System.out.println("Build: " + BuilDVersion);
-		System.out.println("Welcome to Chat!");
-		System.out.println("Enter your nickname:");
-		
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		nickname = input.next();
-		
-		System.out.println("Use default server [1], or use server ip[2]?");
-		@SuppressWarnings("resource")
-		Scanner input2 = new Scanner(System.in);
-		String in_string = input2.next();
-		if(Integer.parseInt(in_string) == 2){
-			System.out.println("Type server ip:");
-			@SuppressWarnings("resource")
-			Scanner input3 = new Scanner(System.in);
-			host = input3.next();
-		}
-		try {
-			new ChatClient(host, 45000).run(); // Пробуем приконнетиться...
-		} catch (IOException e) { // если объект не создан...
-			System.out.println("Connected Error!"); // сообщаем...
-		}
-	}
- 
+	
 	/**
 	* Вложенный приватный класс асинхронного чтения
-	*/
-	
+	 */
+
 	private class Receiver implements Runnable{
 
 		/**
@@ -144,13 +153,6 @@ public class ChatClient {
 				}
 			}
 		}
-	}
-	
-	public static String get_time(){
-		Date d = new Date();
-		SimpleDateFormat format = new SimpleDateFormat("hh:mm");
-		String returner = format.format(d);
-		return returner;
 	}
 }
  
