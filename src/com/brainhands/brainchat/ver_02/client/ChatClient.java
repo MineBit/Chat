@@ -20,17 +20,18 @@ public class ChatClient {
 	public static String nickname = "User"; //Дефолтное значение для имени пользователя
 	public static String host = "127.0.0.1"; //Дефолтное значение хоста TODO перед выпуском заменить на ip сервера
 	final Socket s; // это будет сокет для сервера
-	final BufferedReader socketReader; // буферизированный читатель с сервера
-	final BufferedWriter socketWriter; // буферизированный писатель на сервер
-	final BufferedReader userInput; // буферизированный читатель пользовательского ввода с консоли
-	
+	static BufferedReader socketReader; // буферизированный читатель с сервера
+	static BufferedWriter socketWriter; // буферизированный писатель на сервер
+	static BufferedReader userInput; // буферизированный читатель пользовательского ввода с консоли
+
 	/**
-	* Конструктор объекта клиента
-	* @param host - IP адрес или localhost или доменное имя
-	* @param port - порт, на котором висит сервер
-	* @throws java.io.IOException - если не смогли приконнектиться, кидается исключение, чтобы
-	* предотвратить создание объекта
-	*/
+	 * Конструктор объекта клиента
+	 *
+	 * @param host - IP адрес или localhost или доменное имя
+	 * @param port - порт, на котором висит сервер
+	 * @throws java.io.IOException - если не смогли приконнектиться, кидается исключение, чтобы
+	 *                             предотвратить создание объекта
+	 */
 
 	public ChatClient(String host, int port) throws IOException {
 		s = new Socket(host, port); // создаем сокет
@@ -44,30 +45,10 @@ public class ChatClient {
 
 	public static void main(String[] args) { // входная точка программы
 		StartFrame.View();
+
 		System.out.println("Brain Chat | " + Version + "| by Brain Hands");
 		System.out.println("Build: " + BuilDVersion);
 		System.out.println("Welcome to Chat!");
-		System.out.println("Enter your nickname:");
-
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		nickname = input.next();
-
-		System.out.println("Use default server [1], or use server ip[2]?");
-		@SuppressWarnings("resource")
-		Scanner input2 = new Scanner(System.in);
-		String in_string = input2.next();
-		if (Integer.parseInt(in_string) == 2) {
-			System.out.println("Type server ip:");
-			@SuppressWarnings("resource")
-			Scanner input3 = new Scanner(System.in);
-			host = input3.next();
-		}
-		try {
-			new ChatClient(host, 45000).run(); // Пробуем приконнетиться...
-		} catch (IOException e) { // если объект не создан...
-			System.out.println("Connected Error!"); // сообщаем...
-		}
 	}
 
 	public static String get_time() {
@@ -76,26 +57,21 @@ public class ChatClient {
 		String returner = format.format(d);
 		return returner;
 	}
- 
+
 	/**
 	 * метод, где происходит главный цикл чтения сообщений с консоли и отправки на сервер
-	*/
+	 */
 
-	public void run() {
+	public void run(String toSend) {
 		//System.out.println("Write for send (For exit press Enter):");
 		while (true) {
 			String userString = null;
-			try {
-				userString = userInput.readLine(); // читаем строку от пользователя
-			} catch (IOException ignored) {
-			} // с консоли эксепшена не может быть в принципе, игнорируем
-			//если что-то не так или пользователь просто нажал Enter...
-			if (userString == null || userString.length() == 0 || s.isClosed()) {
+			if (toSend == null || toSend.length() == 0 || s.isClosed()) {
 				close(); // ...закрываем коннект.
 				break; // до этого break мы не дойдем, но стоит он, чтобы компилятор не ругался
 			} else { //...иначе...
 				try {
-					String Crypted_String = Crypto.Cripting("[" + get_time() + "] " + nickname + ": " + userString);
+					String Crypted_String = Crypto.Cripting(toSend);
 					socketWriter.write(Crypted_String); //пишем строку пользователя
 					socketWriter.write("\n"); //добавляем "новою строку", дабы readLine() сервера сработал
 					socketWriter.flush(); // отправляем
@@ -121,16 +97,16 @@ public class ChatClient {
 			}
 		}
 	}
-	
+
 	/**
-	* Вложенный приватный класс асинхронного чтения
+	 * Вложенный приватный класс асинхронного чтения
 	 */
 
-	private class Receiver implements Runnable{
+	private class Receiver implements Runnable {
 
 		/**
-		* run() вызовется после запуска нити из конструктора клиента чата.
-		*/
+		 * run() вызовется после запуска нити из конструктора клиента чата.
+		 */
 
 		public void run() {
 			while (!s.isClosed()) { //сходу проверяем коннект.
@@ -153,6 +129,18 @@ public class ChatClient {
 				}
 			}
 		}
+	}
+
+	public static void logIn(String Login, String Pass) throws IOException {
+		try {
+			new ChatClient(host, 45000).run(Login+"@"+"1"+"@"+Pass);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void Registration(String username, String password){
+
 	}
 }
  

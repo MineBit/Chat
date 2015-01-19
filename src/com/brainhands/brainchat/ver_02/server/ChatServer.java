@@ -1,6 +1,7 @@
 package com.brainhands.brainchat.ver_02.server;
 
 import com.brainhands.brainchat.utill.Crypto;
+import com.brainhands.brainchat.utill.Files;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -95,7 +96,14 @@ public class ChatServer {
 	*/
 
 	public static void main(String[] args) throws IOException {
-		System.out.println("Brain Chat Sever |0.1.1S| by Brain Hands");
+		System.out.println("Brain Chat Sever |0.2| by Brain Hands");
+		Files.MakeDir("BrainChatServerFiles");
+		Files.Write(" ","BrainChatServerFiles/users.bbf");
+		String[] users = Files.Read("BrainChatServerFiles/users.bbf");
+		if(users.length == 0){
+			System.out.println("База данных пуста!");
+
+		}
 		new ChatServer(45000).run(); // если сервер не создался, программа
 		// вылетит по эксепшену, и метод run() не запуститься
 	}
@@ -157,14 +165,28 @@ public class ChatServer {
 		*/
 
 		public synchronized void send(String line) {
+			String send_to_user = null;
+			String[] str = line.split("@");
+			//Если пришедшие сообщение с кодом доступа "1" то значит это сообщение для аунтификации пользователя:
+			if(Integer.parseInt(str[1]) == 1){
+				String user_name = str[0];
+				String user_password = str[2];
+				System.out.println("Попытка авторизации пользователя "+user_name+"...");
+				String[] users = Files.Read("BrainChatServerFiles/users.bbf");
+			}
 			try{
-				bw.write(Crypto.Cripting(Crypto.Recripting(line))); // пишем строку
+				bw.write(Crypto.Cripting(Crypto.Recripting(send_to_user))); // пишем строку
 				bw.write("\n"); // пишем перевод строки
 				bw.flush(); // отправляем
 			} catch (IOException e) {
 				close(); //если глюк в момент отправки - закрываем данный сокет.
 			}
-		} 
+		}
+
+
+		public void Registration(String user_name, String password){
+
+		}
 		
 		/**
 		* метод аккуратно закрывает сокет и убирает его со списка активных сокетов

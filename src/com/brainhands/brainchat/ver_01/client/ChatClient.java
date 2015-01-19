@@ -68,7 +68,7 @@ public class ChatClient {
 			}
 		}
 	}
-
+	 public static void sendToServer(String toSend){}
 	/**
 	* метод закрывает коннект и выходит из
 	* программы (это единственный выход прервать работу BufferedReader.readLine(), на ожидании пользователя)
