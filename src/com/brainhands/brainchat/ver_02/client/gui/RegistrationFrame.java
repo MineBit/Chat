@@ -1,17 +1,14 @@
 package com.brainhands.brainchat.ver_02.client.gui;
 
-import java.awt.EventQueue;
+import com.brainhands.brainchat.ver_02.client.ChatClient;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import java.awt.Font;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JButton;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class RegistrationFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -19,9 +16,9 @@ public class RegistrationFrame extends JFrame {
 	static RegistrationFrame frame;
 	
 	private JPanel contentPane;
-	private JTextField login_tf;
-	private JTextField password_tf;
-	private JTextField re_password_tf;
+	static JTextField login_tf;
+	static JTextField password_tf;
+	static JTextField re_password_tf;
 
 	/**
 	 * Метод для запуска окна:
@@ -69,6 +66,7 @@ public class RegistrationFrame extends JFrame {
 		re_password_tf.setColumns(10);
 		
 		JButton RegestrationButton = new JButton("Зарегистрироваться");
+		RegestrationButton.addActionListener(new RegButtonListener());
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -115,5 +113,30 @@ public class RegistrationFrame extends JFrame {
 					.addContainerGap(118, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
+	}
+
+	static class RegButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent arg0) {
+			String login = login_tf.getText();
+			String password = password_tf.getText();
+			String re_password = re_password_tf.getText();
+			if(login.length() > 3){
+				if(re_password.equals(password)){
+					if (password.length() > 9) {
+						int return_code = ChatClient.Registration(login, password);
+					}else{
+						//TODO Переделать окна ошибок на нормальные
+						JOptionPane.showMessageDialog(null,"Введенный пароль меньше 9 символов! Это не безопастно!","Ошибка!",JOptionPane.ERROR_MESSAGE);
+					}
+				}else{
+					//TODO Переделать окна ошибок на нормальные
+					JOptionPane.showMessageDialog(null,"Логин не введен, или меньше 3 символов!!!","Ошибка!",JOptionPane.ERROR_MESSAGE);
+				}
+			}else{
+				//TODO Переделать окна ошибок на нормальные
+				JOptionPane.showMessageDialog(null,"Введенные Вами пароли не совпадают!!!","Ошибка!",JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
 	}
 }

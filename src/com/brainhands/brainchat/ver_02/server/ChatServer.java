@@ -153,7 +153,7 @@ public class ChatServer {
 					}
 				} else { // иначе - банальная рассылка по списку сокет-процессоров
 					for (SocketProcessor sp:q) {
-						sp.send(line);
+						sp.send(Crypto.Recripting(line));
 					}
 				}
 			}
@@ -167,15 +167,35 @@ public class ChatServer {
 		public synchronized void send(String line) {
 			String send_to_user = null;
 			String[] str = line.split("@");
+			switch (Integer.parseInt(str[2])){
+				case 0:
+					boolean is_username_used = false;
+					String [] parsed_users_file = Files.Read("BrainChatServerFiles/users.bbf");
+					for (int i = 0; i < parsed_users_file.length; i++){
+						String recrypted_line = Crypto.Recripting(parsed_users_file[i]);
+						String[] usernames_parsed = recrypted_line.split(":");
+						if(usernames_parsed[0].equals(str[3])){
+							is_username_used = true;
+						}
+					}
+					if(is_username_used == true){
+						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@0"; //Отправляем ноль, значит имя пользователя занято
+					}else{
+						//Если все ок, то регистрируем пользователя, и отправляем единицу
+						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@1"; //Отправляем ноль, значит имя пользователя занято
+					}
+			}
 			//Если пришедшие сообщение с кодом доступа "1" то значит это сообщение для аунтификации пользователя:
+			/*
 			if(Integer.parseInt(str[1]) == 1){
 				String user_name = str[0];
 				String user_password = str[2];
 				System.out.println("Попытка авторизации пользователя "+user_name+"...");
 				String[] users = Files.Read("BrainChatServerFiles/users.bbf");
 			}
+			*/
 			try{
-				bw.write(Crypto.Cripting(Crypto.Recripting(send_to_user))); // пишем строку
+				bw.write(Crypto.Cripting((send_to_user))); // пишем строку
 				bw.write("\n"); // пишем перевод строки
 				bw.flush(); // отправляем
 			} catch (IOException e) {

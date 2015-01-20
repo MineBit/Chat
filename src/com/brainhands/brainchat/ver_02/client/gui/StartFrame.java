@@ -21,6 +21,7 @@ public class StartFrame extends JFrame {
     static StartFrame frame;
 
     public StartFrame() {
+    	setTitle("BrainChat | Вход");
         Other.initSystemLookAndFeel();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 166);

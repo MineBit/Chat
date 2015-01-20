@@ -1,13 +1,13 @@
 package com.brainhands.brainchat.ver_02.client;
 
 import com.brainhands.brainchat.utill.Crypto;
+import com.brainhands.brainchat.utill.MathUtill;
 import com.brainhands.brainchat.ver_02.client.gui.StartFrame;
 
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
  
 /**
 * Класс-клиент чат-сервера. Работает в консоли. Командой с консоли shutdown посылаем сервер в оффлайн
@@ -17,8 +17,11 @@ public class ChatClient {
 
 	final public static String Version = "0.2"; // Переменная хранит в себе версию чата
 	final public static String BuilDVersion = "0034"; // Переменная содержит номер сборки
-	public static String nickname = "User"; //Дефолтное значение для имени пользователя
+
+	public static String nickname = null; //Дефолтное значение для имени пользователя
 	public static String host = "127.0.0.1"; //Дефолтное значение хоста TODO перед выпуском заменить на ip сервера
+	public static int user_personal_id = MathUtill.GetRandom(10000000,99999999);
+
 	final Socket s; // это будет сокет для сервера
 	static BufferedReader socketReader; // буферизированный читатель с сервера
 	static BufferedWriter socketWriter; // буферизированный писатель на сервер
@@ -51,6 +54,7 @@ public class ChatClient {
 		System.out.println("Welcome to Chat!");
 	}
 
+	//Метод для получения текущего времени на компьютере:
 	public static String get_time() {
 		Date d = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("hh:mm");
@@ -59,7 +63,7 @@ public class ChatClient {
 	}
 
 	/**
-	 * метод, где происходит главный цикл чтения сообщений с консоли и отправки на сервер
+	 * метод, где происходит отправка сообщений на сервер
 	 */
 
 	public void run(String toSend) {
@@ -121,26 +125,54 @@ public class ChatClient {
 					System.out.println("Connected Error!"); // а сюда мы попадем в случае ошибок сети.
 					close(); // ну и закрываем сокет (кстати, вызвается метод класса ChatClient, есть доступ)
 				}
-				if (line == null) { // строка будSuет null если сервер прикрыл коннект по своей инициативе, сеть работает
+				if (line == null) { // строка будет null если сервер прикрыл коннект по своей инициативе, сеть работает
 					System.out.println("Server close connection!");
 					close(); // ...закрываемся
-				} else { // иначе печатаем то, что прислал сервер.
-					System.out.println(">>" + Crypto.Recripting(line));
+				} else { // иначе печатаем то, что прислал серверa
+					System.out.println("Принято с сервера:" + Crypto.Recripting(line));
+					String[] parsed = Crypto.Recripting(line).split("@");
+					if (Integer.parseInt(parsed[0]) == user_personal_id && nickname.equals(parsed[1])){
+						switch (Integer.parseInt(parsed[2])){
+							case 0:
+								FromServerStrings.string_from_code_0 = null;
+								FromServerStrings.string_from_code_0 = Crypto.Recripting(line);
+							case 1:
+								FromServerStrings.string_from_code_1 = null;
+								FromServerStrings.string_from_code_1 = Crypto.Recripting(line);
+						}
+					}
 				}
 			}
 		}
 	}
 
-	public static void logIn(String Login, String Pass) throws IOException {
+	//Метод для отправки данных на сервер:
+	public static void SendToServer(String to_send){
 		try {
-			new ChatClient(host, 45000).run(Login+"@"+"1"+"@"+Pass);
+			new ChatClient(host, 45000).run(to_send);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void Registration(String username, String password){
+	//Метод для авторизации:
+	public static void logIn(String Login, String Pass) throws IOException {
+		SendToServer(Login+"@1@"+Pass);
+		//TODO Недописан
+	}
 
+	//Метод для регистрации:
+	public static int Registration(String username, String password){
+		nickname = username;
+		SendToServer(Integer.toString(user_personal_id)+"@"+nickname+"@0@"+username+"@"+password);
+		FromServerStrings.string_from_code_0 = null;
+		while (true){
+			if(FromServerStrings.string_from_code_0 != null){
+				//String[] 0
+				break;
+			}
+		}
+		return 0;
 	}
 }
  
