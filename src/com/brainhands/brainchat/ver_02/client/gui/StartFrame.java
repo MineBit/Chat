@@ -149,7 +149,8 @@ public class StartFrame extends JFrame {
 
     static class RegistrationButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            ChatClient.Registration(GetUserName(), GetPassword());
+            RegistrationFrame.View();
+            Close();
         }
     }
 }

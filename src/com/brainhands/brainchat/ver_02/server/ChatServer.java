@@ -10,17 +10,17 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
-* Класс сервера. Сидит тихо на порту, принимает сообщение, создает SocketProcessor на каждое сообщение
-*/
+ * Класс сервера. Сидит тихо на порту, принимает сообщение, создает SocketProcessor на каждое сообщение
+ */
 
 public class ChatServer {
 	private ServerSocket ss; // сам сервер-сокет
 	private Thread serverThread; // главная нить обработки сервер-сокета
 	private int port; // порт сервер сокета.
-	
+
 	//очередь, где храняться все SocketProcessorы для рассылки
 	BlockingQueue<SocketProcessor> q = new LinkedBlockingQueue<SocketProcessor>();
- 
+
 	/**
 	 * Конструктор объекта сервера
 	 * @param port Порт, где будем слушать входящие сообщения.
@@ -33,8 +33,8 @@ public class ChatServer {
 	}
 
 	/**
-	* главный цикл прослушивания/ожидания коннекта.
-	*/
+	 * главный цикл прослушивания/ожидания коннекта.
+	 */
 
 	void run() {
 		serverThread = Thread.currentThread(); // со старта сохраняем нить (чтобы можно ее было interrupt())
@@ -59,9 +59,9 @@ public class ChatServer {
 	}
 
 	/**
-	* Ожидает новое подключение.
-	* @return Сокет нового подключения
-	*/
+	 * Ожидает новое подключение.
+	 * @return Сокет нового подключения
+	 */
 
 	private Socket getNewConn() {
 		Socket s = null;
@@ -74,8 +74,8 @@ public class ChatServer {
 	}
 
 	/**
-	* метод "глушения" сервера
-	*/
+	 * метод "глушения" сервера
+	 */
 
 	private synchronized void shutdownServer() {
 		// обрабатываем список рабочих коннектов, закрываем каждый
@@ -90,27 +90,26 @@ public class ChatServer {
 	}
 
 	/**
-	* входная точка программы
-	* @param args
-	* @throws java.io.IOException
-	*/
+	 * входная точка программы
+	 * @param args
+	 * @throws java.io.IOException
+	 */
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Brain Chat Sever |0.2| by Brain Hands");
 		Files.MakeDir("BrainChatServerFiles");
-		Files.Write(" ","BrainChatServerFiles/users.bbf");
+		Files.Write(Crypto.Cripting("First:1"),"BrainChatServerFiles/users.bbf");
 		String[] users = Files.Read("BrainChatServerFiles/users.bbf");
 		if(users.length == 0){
 			System.out.println("База данных пуста!");
-
-		}
+		}else System.out.println("Количество зарегистрированных пользователей: "+users.length);
 		new ChatServer(45000).run(); // если сервер не создался, программа
 		// вылетит по эксепшену, и метод run() не запуститься
 	}
 
 	/**
-	* вложенный класс асинхронной обработки одного коннекта.
-	*/
+	 * вложенный класс асинхронной обработки одного коннекта.
+	 */
 
 	private class SocketProcessor implements Runnable{
 		Socket s; // наш сокет
@@ -118,20 +117,20 @@ public class ChatServer {
 		BufferedWriter bw; // буферизированный писатель в сокет
 
 		/**
-		* Сохраняем сокет, пробуем создать читателя и писателя. Если не получается - вылетаем без создания объекта
-		* @param socketParam сокет
-		* @throws java.io.IOException Если ошибка в создании br || bw
-		*/
+		 * Сохраняем сокет, пробуем создать читателя и писателя. Если не получается - вылетаем без создания объекта
+		 * @param socketParam сокет
+		 * @throws java.io.IOException Если ошибка в создании br || bw
+		 */
 
 		SocketProcessor(Socket socketParam) throws IOException {
 			s = socketParam;
 			br = new BufferedReader(new InputStreamReader(s.getInputStream(), "UTF-8"));
 			bw = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8") );
 		}
-		
+
 		/**
-		* Главный цикл чтения сообщений/рассылки
-		*/
+		 * Главный цикл чтения сообщений/рассылки
+		 */
 
 		public void run() {
 			while (!s.isClosed()) { // пока сокет не закрыт...
@@ -158,11 +157,11 @@ public class ChatServer {
 				}
 			}
 		}
- 
+
 		/**
-		* Метод посылает в сокет полученную строку
-		* @param line строка на отсылку
-		*/
+		 * Метод посылает в сокет полученную строку
+		 * @param line строка на отсылку
+		 */
 
 		public synchronized void send(String line) {
 			String send_to_user = null;
@@ -182,8 +181,11 @@ public class ChatServer {
 						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@0"; //Отправляем ноль, значит имя пользователя занято
 					}else{
 						//Если все ок, то регистрируем пользователя, и отправляем единицу
+						AddNewUser(str[3],str[4]);
 						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@1"; //Отправляем ноль, значит имя пользователя занято
 					}
+				case 1:
+
 			}
 			//Если пришедшие сообщение с кодом доступа "1" то значит это сообщение для аунтификации пользователя:
 			/*
@@ -207,11 +209,11 @@ public class ChatServer {
 		public void Registration(String user_name, String password){
 
 		}
-		
+
 		/**
-		* метод аккуратно закрывает сокет и убирает его со списка активных сокетов
-		*/
-		
+		 * метод аккуратно закрывает сокет и убирает его со списка активных сокетов
+		 */
+
 		public synchronized void close() {
 			q.remove(this); //убираем из списка
 			if (!s.isClosed()) {
@@ -220,16 +222,21 @@ public class ChatServer {
 				} catch (IOException ignored) {}
 			}
 		}
- 
+
 		/**
-		* финализатор просто на всякий случай.
-		* @throws Throwable
-		*/
-		
+		 * финализатор просто на всякий случай.
+		 * @throws Throwable
+		 */
+
 		@Override
 		protected void finalize() throws Throwable {
 			super.finalize();
 			close();
 		}
-}
+	}
+
+	//Метод для регистрации нового пользователя на сервере:
+	static void AddNewUser(String username, String password){
+		Files.Write(Crypto.Cripting(username+":"+password),"BrainChatServerFiles/users.bbf");
+	}
 }

@@ -4,14 +4,15 @@ import com.brainhands.brainchat.utill.Crypto;
 import com.brainhands.brainchat.utill.MathUtill;
 import com.brainhands.brainchat.ver_02.client.gui.StartFrame;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
- 
+
 /**
-* Класс-клиент чат-сервера. Работает в консоли. Командой с консоли shutdown посылаем сервер в оффлайн
-*/
+ * Класс-клиент чат-сервера. Работает в консоли. Командой с консоли shutdown посылаем сервер в оффлайн
+ */
 
 public class ChatClient {
 
@@ -162,17 +163,24 @@ public class ChatClient {
 	}
 
 	//Метод для регистрации:
-	public static int Registration(String username, String password){
+	public static boolean Registration(String username, String password){
 		nickname = username;
 		SendToServer(Integer.toString(user_personal_id)+"@"+nickname+"@0@"+username+"@"+password);
-		FromServerStrings.string_from_code_0 = null;
-		while (true){
-			if(FromServerStrings.string_from_code_0 != null){
-				//String[] 0
-				break;
+		while (true) {
+			if (FromServerStrings.string_from_code_0 != null) {
+				String[] parsed = FromServerStrings.string_from_code_0.split("@");
+				switch (Integer.parseInt(parsed[3])) {
+					case 0:
+						nickname = null;
+						return false;
+					case 1:
+						nickname = username;
+						return true;
+					default:
+						JOptionPane.showMessageDialog(null,"Неизвестная ошибка регистрации!","Ошибка!",JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
-		return 0;
 	}
 }
  
