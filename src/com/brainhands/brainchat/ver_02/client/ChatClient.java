@@ -138,25 +138,38 @@ public class ChatClient {
 	}
 
 	//Метод для авторизации:
-	public static void logIn(String Login, String Pass) throws IOException {
-		SendToServer(Login+"@1@"+Pass);
-		//TODO Недописан
+	public static boolean LogIn(String username, String password){
+		nickname = username;
+		SendToServer(Integer.toString(user_personal_id)+"@"+nickname+"@1@"+username+"@"+password);
+		while(true){
+			if(FromServerStrings.string_from_code_1 != null){
+				String[] parsed = FromServerStrings.string_from_code_1.split("@");
+				switch (Integer.parseInt(parsed[3])){
+					case 0:
+						nickname = null;
+						return false;
+					case 1:
+						nickname = username;
+						return true;
+					default:
+						JOptionPane.showMessageDialog(null, "Неизвестная ошибка авторизации!", "Ошибка!", JOptionPane.ERROR_MESSAGE);
+						return false;
+				}
+			}
+		}
 	}
 
 	//Метод для регистрации:
 	public static boolean Registration(String username, String password){
-		boolean returner = false;
 		nickname = username;
 		SendToServer(Integer.toString(user_personal_id)+"@"+nickname+"@0@"+username+"@"+password);
 		while (true) {
-			System.out.println("Ждем ответа сервера...");
 			if (FromServerStrings.string_from_code_0 != null) {
 				String[] parsed = FromServerStrings.string_from_code_0.split("@");
 				switch (Integer.parseInt(parsed[3])) {
 					case 0:
 						nickname = null;
 						return false;
-
 					case 1:
 						nickname = username;
 						return true;

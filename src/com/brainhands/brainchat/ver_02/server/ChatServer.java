@@ -169,10 +169,11 @@ public class ChatServer {
 		public synchronized void send(String line) {
 			String send_to_user = null;
 			String[] str = line.split("@");
+			String [] parsed_users_file = Files.Read("BrainChatServerFiles/users.bbf");
 			switch (Integer.parseInt(str[2])){
 				case 0:
+					//Если пришел запрос с кодом регистрации:
 					boolean is_username_used = false;
-					String [] parsed_users_file = Files.Read("BrainChatServerFiles/users.bbf");
 					for (int i = 0; i < parsed_users_file.length; i++){
 						String recrypted_line = Crypto.Recripting(parsed_users_file[i]);
 						String[] usernames_parsed = recrypted_line.split(":");
@@ -180,25 +181,29 @@ public class ChatServer {
 							is_username_used = true;
 						}
 					}
-					if(is_username_used == true){
+					if(is_username_used){
 						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@0"; //Отправляем ноль, значит имя пользователя занято
 					}else{
 						//Если все ок, то регистрируем пользователя, и отправляем единицу
 						AddNewUser(str[3],str[4]);
-						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@1"; //Отправляем ноль, значит имя пользователя занято
+						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@1";
 					}
 				case 1:
-
+					//Если пришел запрос с кодом регистрации:
+					boolean is_password_correct = false;
+					for (int i = 0; i < parsed_users_file.length; i++){
+						String recrypted_line = Crypto.Recripting(parsed_users_file[i]);
+						String[] lines_parsed = recrypted_line.split(":");
+						if (lines_parsed[0].equals(str[3]) && lines_parsed[1].equals(str[4])){
+							is_password_correct = true;
+						}
+					}
+					if (is_password_correct){
+						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@0"; //Отправляем ноль, значит логин/пароль неверные
+					}else{
+						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@1"; //Отправляем ноль, значит авторизация прошла успешно
+					}
 			}
-			//Если пришедшие сообщение с кодом доступа "1" то значит это сообщение для аунтификации пользователя:
-			/*
-			if(Integer.parseInt(str[1]) == 1){
-				String user_name = str[0];
-				String user_password = str[2];
-				System.out.println("Попытка авторизации пользователя "+user_name+"...");
-				String[] users = Files.Read("BrainChatServerFiles/users.bbf");
-			}
-			*/
 			try{
 				bw.write(Crypto.Cripting((send_to_user))); // пишем строку
 				bw.write("\n"); // пишем перевод строки

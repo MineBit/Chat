@@ -11,7 +11,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 /**
  * Created by Mine_Bit[Brain Hands]
@@ -141,17 +140,16 @@ public class StartFrame extends JFrame {
             String password = GetPassword();
             if(nickname.equals(null) || password.equals(null)){
                 JOptionPane.showMessageDialog(null,"Поле \"имя пользователя\" \"пароль\" пустое!!!","Ошибка!",JOptionPane.ERROR_MESSAGE);
-            }if (nickname.length() < 5){
-                JOptionPane.showMessageDialog(null,"Имя пользователя меньше 5 символов!!!","Ошибка!",JOptionPane.ERROR_MESSAGE);
-            }if (password.length() < 5){
-                JOptionPane.showMessageDialog(null,"Ваш пароль меньше 5 символов!!!","Ошибка!",JOptionPane.ERROR_MESSAGE);
+            }else if (nickname.length() < 3){
+                JOptionPane.showMessageDialog(null,"Имя пользователя меньше 3 символов!!!","Ошибка!",JOptionPane.ERROR_MESSAGE);
+            }else if (password.length() < 9){
+                JOptionPane.showMessageDialog(null,"Ваш пароль меньше 9 символов!!!","Ошибка!",JOptionPane.ERROR_MESSAGE);
             }else{
-                Close();
-                try {
-                    ChatClient.logIn(nickname, password);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                boolean is_auth_correct = ChatClient.LogIn(nickname, password);
+                if (is_auth_correct){
+                    Close();
+                    MainFrame.View();
+                }else JOptionPane.showMessageDialog(null,"Неправильный логин или пароль!","Ошибка!",JOptionPane.ERROR_MESSAGE);
             }
         }
     }
