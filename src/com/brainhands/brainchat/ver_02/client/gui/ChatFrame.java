@@ -2,24 +2,21 @@ package com.brainhands.brainchat.ver_02.client.gui;
 
 import com.brainhands.brainchat.utill.Other;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JButton;
+import java.awt.*;
+
+/**
+ * Created by Mine_Bit[Brain Hands]
+ * forum.brainhands.ru
+ * brain-soft.org
+ */
 
 public class ChatFrame extends JFrame {
-
 	private static final long serialVersionUID = 1L;
-	
+
+	static ChatFrame frame;
+
 	private JPanel contentPane;
 	private JTextField MessageField;
 
@@ -28,7 +25,7 @@ public class ChatFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ChatFrame frame = new ChatFrame();
+					frame = new ChatFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,8 +34,9 @@ public class ChatFrame extends JFrame {
 		});
 	}
 
-	
+	//Конструктор окна:
 	public ChatFrame() {
+		Other.initSystemLookAndFeel();
 		setTitle("BrainChat | ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 498);

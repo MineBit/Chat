@@ -1,22 +1,20 @@
 package com.brainhands.brainchat.ver_02.client.gui;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-
 import com.brainhands.brainchat.utill.Other;
 import com.brainhands.brainchat.ver_02.client.ChatClient;
 
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.*;
 
+/**
+ * Created by Mine_Bit[Brain Hands]
+ * forum.brainhands.ru
+ * brain-soft.org
+ */
+
+//Главное окно программы:
 public class MainFrame {
 	
 	private static JFrame frmBrainchat;

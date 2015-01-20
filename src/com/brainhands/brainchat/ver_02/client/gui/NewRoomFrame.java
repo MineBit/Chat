@@ -1,24 +1,19 @@
 package com.brainhands.brainchat.ver_02.client.gui;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-
-import java.awt.Font;
-
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
-
 import com.brainhands.brainchat.utill.Other;
 import com.brainhands.brainchat.ver_02.client.ChatClient;
+
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+
+/**
+ * Created by Mine_Bit[Brain Hands]
+ * forum.brainhands.ru
+ * brain-soft.org
+ */
 
 public class NewRoomFrame extends JFrame {
 
@@ -43,6 +38,7 @@ public class NewRoomFrame extends JFrame {
 		});
 	}
 
+	//Конструктор окна:
 	public NewRoomFrame() {
 		setTitle("BrainChat | "+ChatClient.Version);
 		setResizable(false);

@@ -10,7 +10,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Класс сервера. Сидит тихо на порту, принимает сообщение, создает SocketProcessor на каждое сообщение
+ * Created by Mine_Bit[Brain Hands]
+ * forum.brainhands.ru
+ * brain-soft.org
  */
 
 public class ChatServer {
@@ -96,6 +98,7 @@ public class ChatServer {
 	 */
 
 	public static void main(String[] args) throws IOException {
+		//TODO Написать выбор (первая загрузка-непервая загрузка) чтобы не плодились ферсты
 		System.out.println("Brain Chat Sever |0.2| by Brain Hands");
 		Files.MakeDir("BrainChatServerFiles");
 		Files.Write(Crypto.Cripting("First:1"),"BrainChatServerFiles/users.bbf");

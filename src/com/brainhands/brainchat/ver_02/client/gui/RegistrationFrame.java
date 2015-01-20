@@ -11,6 +11,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Created by Mine_Bit[Brain Hands]
+ * forum.brainhands.ru
+ * brain-soft.org
+ */
+
+//Окно регистрации:
 public class RegistrationFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 

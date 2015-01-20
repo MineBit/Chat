@@ -13,6 +13,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+/**
+ * Created by Mine_Bit[Brain Hands]
+ * forum.brainhands.ru
+ * brain-soft.org
+ */
+
+//Стартовое окно авторизации:
 public class StartFrame extends JFrame {
 
     private JPanel contentPane;
@@ -20,8 +27,24 @@ public class StartFrame extends JFrame {
     private static JPasswordField passwordField;
     static StartFrame frame;
 
+    //Метод для запуска окна:
+    public static void View() {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    frame = new StartFrame();
+                    frame.setVisible(true);
+                    frame.setTitle(Constans.Ver02Title);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    //Конструктор окна:
     public StartFrame() {
-    	setTitle("BrainChat | Вход");
+        setTitle("BrainChat | Вход");
         Other.initSystemLookAndFeel();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 166);
@@ -44,72 +67,58 @@ public class StartFrame extends JFrame {
 
         JButton EnterButton = new JButton("Войти");
         EnterButton.addActionListener(new EnterButtonListener());
-        
+
         JButton registration_button = new JButton("Регистрация");
         registration_button.addActionListener(new RegistrationButtonListener());
         GroupLayout gl_contentPane = new GroupLayout(contentPane);
         gl_contentPane.setHorizontalGroup(
-        	gl_contentPane.createParallelGroup(Alignment.LEADING)
-        		.addGroup(gl_contentPane.createSequentialGroup()
-                        .addContainerGap(99, Short.MAX_VALUE)
-                        .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-                                .addGroup(gl_contentPane.createSequentialGroup()
-                                        .addComponent(Lb_1)
-                                        .addGap(93))
-                                .addGroup(gl_contentPane.createSequentialGroup()
-                                        .addComponent(Lb_2)
-                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                        .addComponent(nickname_tf, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addGap(116))
-                                .addGroup(gl_contentPane.createSequentialGroup()
-                                        .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-                                                .addGroup(gl_contentPane.createSequentialGroup()
-                                                        .addComponent(Lb_3)
-                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                        .addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(gl_contentPane.createSequentialGroup()
-                                                        .addGap(10)
-                                                        .addComponent(EnterButton)
-                                                        .addGap(18)
-                                                        .addComponent(registration_button)))
-                                        .addGap(107))))
+                gl_contentPane.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_contentPane.createSequentialGroup()
+                                .addContainerGap(99, Short.MAX_VALUE)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+                                        .addGroup(gl_contentPane.createSequentialGroup()
+                                                .addComponent(Lb_1)
+                                                .addGap(93))
+                                        .addGroup(gl_contentPane.createSequentialGroup()
+                                                .addComponent(Lb_2)
+                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                .addComponent(nickname_tf, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addGap(116))
+                                        .addGroup(gl_contentPane.createSequentialGroup()
+                                                .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(gl_contentPane.createSequentialGroup()
+                                                                .addComponent(Lb_3)
+                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                .addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(gl_contentPane.createSequentialGroup()
+                                                                .addGap(10)
+                                                                .addComponent(EnterButton)
+                                                                .addGap(18)
+                                                                .addComponent(registration_button)))
+                                                .addGap(107))))
         );
         gl_contentPane.setVerticalGroup(
-        	gl_contentPane.createParallelGroup(Alignment.LEADING)
-        		.addGroup(gl_contentPane.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(Lb_1)
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(Lb_2)
-                                .addComponent(nickname_tf, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(Lb_3)
-                                .addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(EnterButton)
-                                .addComponent(registration_button))
-                        .addContainerGap())
+                gl_contentPane.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_contentPane.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(Lb_1)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(Lb_2)
+                                        .addComponent(nickname_tf, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(Lb_3)
+                                        .addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(EnterButton)
+                                        .addComponent(registration_button))
+                                .addContainerGap())
         );
         contentPane.setLayout(gl_contentPane);
     }
 
-    //Метод для запуска окна:
-    public static void View() {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    frame = new StartFrame();
-                    frame.setVisible(true);
-                    frame.setTitle(Constans.Ver02Title);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
     //Метод для закрытия окна:
     public static void Close(){
         frame.setVisible(false);
@@ -125,7 +134,7 @@ public class StartFrame extends JFrame {
         return passwordField.getPassword().toString();
     }
 
-    //TODO сделать нормальные Окна выброса ошибок!!!
+    //Класс обработки нажатия на кнопку "Вход"
     static class EnterButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             String nickname = GetUserName();
@@ -147,6 +156,7 @@ public class StartFrame extends JFrame {
         }
     }
 
+    //Класс обравботки нажатия на кнопку "Регистрация"
     static class RegistrationButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             RegistrationFrame.View();
