@@ -3,12 +3,13 @@ package com.brainhands.brainchat.utill.RSA;
 * To change this template, choose Tools | Templates
 * and open the template in the editor.
 */
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.math.BigInteger;
-        import java.security.MessageDigest;
-        import java.security.NoSuchAlgorithmException;
-        import java.util.Arrays;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 /**
  * @author Moxa
  */

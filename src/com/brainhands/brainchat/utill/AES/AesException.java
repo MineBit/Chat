@@ -1,7 +1,9 @@
 package com.brainhands.brainchat.utill.AES;
 
 /**
- * Created by Василевский on 04.12.2014.
+ * Created by Mine_Bit[Brain Hands]
+ * forum.brainhands.ru
+ * brain-soft.org
  */
 public class AesException extends Exception {
 	

@@ -1,7 +1,9 @@
 package com.brainhands.brainchat.utill;
 
 /**
- * Created by Mine_Bit on 15.11.2014.
+ * Created by Mine_Bit[Brain Hands]
+ * forum.brainhands.ru
+ * brain-soft.org
  */
 public class Constans {
     public static String Ver02Title = "Brain Chat | Version 0.2";

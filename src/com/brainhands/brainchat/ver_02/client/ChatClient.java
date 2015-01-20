@@ -11,43 +11,35 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Класс-клиент чат-сервера. Работает в консоли. Командой с консоли shutdown посылаем сервер в оффлайн
+ * Created by Mine_Bit[Brain Hands]
+ * forum.brainhands.ru
+ * brain-soft.org
  */
 
 public class ChatClient {
 
 	final public static String Version = "0.2"; // Переменная хранит в себе версию чата
-	final public static String BuilDVersion = "0034"; // Переменная содержит номер сборки
+	final public static String BuilDVersion = "0036"; // Переменная содержит номер сборки
 
 	public static String nickname = null; //Дефолтное значение для имени пользователя
 	public static String host = "127.0.0.1"; //Дефолтное значение хоста TODO перед выпуском заменить на ip сервера
-	public static int user_personal_id = MathUtill.GetRandom(10000000,99999999);
+	public static int user_personal_id = MathUtill.GetRandom(10000000,99999999); //Персональнальный индификационный номер клиента, генерируется заново при каждом новом запуске программы
 
-	final Socket s; // это будет сокет для сервера
-	static BufferedReader socketReader; // буферизированный читатель с сервера
-	static BufferedWriter socketWriter; // буферизированный писатель на сервер
-	static BufferedReader userInput; // буферизированный читатель пользовательского ввода с консоли
+	final Socket s;
+	static BufferedReader socketReader; //Буферизированный читатель с сервера
+	static BufferedWriter socketWriter; //Буферизированный писатель на сервер
 
-	/**
-	 * Конструктор объекта клиента
-	 *
-	 * @param host - IP адрес или localhost или доменное имя
-	 * @param port - порт, на котором висит сервер
-	 * @throws java.io.IOException - если не смогли приконнектиться, кидается исключение, чтобы
-	 *                             предотвратить создание объекта
-	 */
 
+	//Конструктор обьекта:
 	public ChatClient(String host, int port) throws IOException {
-		s = new Socket(host, port); // создаем сокет
-		// создаем читателя и писателя в сокет с дефолной кодировкой UTF-8
+		s = new Socket(host, port);
+		//Создаем читателя и писателя в сокет с дефолной кодировкой UTF-8
 		socketReader = new BufferedReader(new InputStreamReader(s.getInputStream(), "UTF-8"));
 		socketWriter = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"));
-		// создаем читателя с консоли (от пользователя)
-		userInput = new BufferedReader(new InputStreamReader(System.in));
-		new Thread(new Receiver()).start();// создаем и запускаем нить асинхронного чтения из сокета
+		new Thread(new Receiver()).start();//Создаем и запускаем нить асинхронного чтения из сокета
 	}
 
-	public static void main(String[] args) { // входная точка программы
+	public static void main(String[] args) {
 		StartFrame.View();
 
 		System.out.println("Brain Chat | " + Version + "| by Brain Hands");
@@ -63,56 +55,45 @@ public class ChatClient {
 		return returner;
 	}
 
-	/**
-	 * метод, где происходит отправка сообщений на сервер
-	 */
-
+	//Метод, где происходит отправка сообщений на сервер:
 	public void run(String toSend) {
-		//System.out.println("Write for send (For exit press Enter):");
 		while (true) {
 			String userString = null;
 			if (toSend == null || toSend.length() == 0 || s.isClosed()) {
 				close(); // ...закрываем коннект.
 				break; // до этого break мы не дойдем, но стоит он, чтобы компилятор не ругался
-			} else { //...иначе...
+			} else {
 				try {
 					String Crypted_String = Crypto.Cripting(toSend);
 					socketWriter.write(Crypted_String); //пишем строку пользователя
 					socketWriter.write("\n"); //добавляем "новою строку", дабы readLine() сервера сработал
 					socketWriter.flush(); // отправляем
-				} catch (IOException e) {
-					close(); // в любой ошибке - закрываем.
-				}
+				} catch (IOException e) {close();}
 			}
 		}
 	}
 
 	/**
+	 * Этот коментарий не удалять, пока не будет написанн чат!!!
 	 * метод закрывает коннект и выходит из
 	 * программы (это единственный выход прервать работу BufferedReader.readLine(), на ожидании пользователя)
 	 */
 
-	public synchronized void close() {//метод синхронизирован, чтобы исключить двойное закрытие.
+	//Метод закрывает соединение с сервером
+	//Метод синхронизированн, чтобы избежать двойного закрытия:
+	public synchronized void close() {
 		if (!s.isClosed()) { // проверяем, что сокет не закрыт...
 			try {
 				s.close(); // закрываем...
-				System.exit(0); // выходим!
 			} catch (IOException ignored) {
 				ignored.printStackTrace();
 			}
 		}
 	}
 
-	/**
-	 * Вложенный приватный класс асинхронного чтения
-	 */
-
+	//Вложенный приватный класс асинхронного чтения
 	private class Receiver implements Runnable {
-
-		/**
-		 * run() вызовется после запуска нити из конструктора клиента чата.
-		 */
-
+		// Этот метод автоматически вызовется после запуска нити из конструктора клиента чата:
 		public void run() {
 			while (!s.isClosed()) { //сходу проверяем коннект.
 				String line = null;
@@ -137,9 +118,11 @@ public class ChatClient {
 							case 0:
 								FromServerStrings.string_from_code_0 = null;
 								FromServerStrings.string_from_code_0 = Crypto.Recripting(line);
+								close();
 							case 1:
 								FromServerStrings.string_from_code_1 = null;
 								FromServerStrings.string_from_code_1 = Crypto.Recripting(line);
+								close();
 						}
 					}
 				}
@@ -151,9 +134,7 @@ public class ChatClient {
 	public static void SendToServer(String to_send){
 		try {
 			new ChatClient(host, 45000).run(to_send);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException e) {e.printStackTrace();}
 	}
 
 	//Метод для авторизации:
@@ -164,23 +145,28 @@ public class ChatClient {
 
 	//Метод для регистрации:
 	public static boolean Registration(String username, String password){
+		boolean returner = false;
 		nickname = username;
 		SendToServer(Integer.toString(user_personal_id)+"@"+nickname+"@0@"+username+"@"+password);
 		while (true) {
+			System.out.println("Ждем ответа сервера...");
 			if (FromServerStrings.string_from_code_0 != null) {
 				String[] parsed = FromServerStrings.string_from_code_0.split("@");
 				switch (Integer.parseInt(parsed[3])) {
 					case 0:
 						nickname = null;
 						return false;
+
 					case 1:
 						nickname = username;
 						return true;
 					default:
-						JOptionPane.showMessageDialog(null,"Неизвестная ошибка регистрации!","Ошибка!",JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Неизвестная ошибка регистрации!", "Ошибка!", JOptionPane.ERROR_MESSAGE);
+						return false;
 				}
 			}
 		}
+
 	}
 }
  

@@ -1,5 +1,11 @@
 package com.brainhands.brainchat.utill;
 
+/**
+ * Created by Mine_Bit[Brain Hands]
+ * forum.brainhands.ru
+ * brain-soft.org
+ */
+
 public class Crypto {
 	public static int[] Key1 = new int[]{
 		0,//[Пробел]
@@ -176,7 +182,7 @@ public class Crypto {
     public static String Cripting(String in_string){
         String returner = null;
         char[] seq = in_string.toCharArray();
-        int key_int = MathUtill.GetRandom(10,100);
+        int key_int = MathUtill.GetRandom(1000,10000);
         returner = Integer.toString(key_int)+"#";
         for(int i = 0; i < seq.length; i++){
             for (int a = 0; a < Transmit.length; a++){
