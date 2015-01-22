@@ -188,6 +188,7 @@ public class ChatServer {
 						AddNewUser(str[3],str[4]);
 						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@1";
 					}
+					break;
 				case 1:
 					//Если пришел запрос с кодом регистрации:
 					boolean is_password_correct = false;
@@ -203,11 +204,18 @@ public class ChatServer {
 					}else{
 						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@1"; //Отправляем ноль, значит авторизация прошла успешно
 					}
+					break;
+				case 2:
+					if (Integer.parseInt(str[3]) == 2){
+					send_to_user = "from_server@all@2@"+str[1]+": "+str[4];
+					}
+					break;
 			}
 			try{
 				bw.write(Crypto.Cripting((send_to_user))); // пишем строку
 				bw.write("\n"); // пишем перевод строки
 				bw.flush(); // отправляем
+
 			} catch (IOException e) {
 				close(); //если глюк в момент отправки - закрываем данный сокет.
 			}

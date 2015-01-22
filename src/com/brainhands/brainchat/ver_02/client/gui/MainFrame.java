@@ -7,11 +7,21 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainFrame {
 	
 	private static JFrame frmBrainchat;
-	private JTextField MessageField;
+
+	public static  JTextField MessageField;
+	public static JTextArea GeneralChatArea;
+	static JButton SendButton;
+	static JButton NewRoomButton;
+	static JButton ConnectButton;
+	static JButton SettingsButton;
+
+	public static boolean redy_to_send = false;
 
 	//Метод для запуска окна:
 	public static void View() {
@@ -19,6 +29,7 @@ public class MainFrame {
 			public void run(){
 				new MainFrame();
 				MainFrame.frmBrainchat.setVisible(true);
+				ChatClient.SendToServer(ChatClient.user_personal_id+"@"+ChatClient.nickname+"@2@1");
 			}
 		});
 	}
@@ -28,6 +39,7 @@ public class MainFrame {
 	}
 
 	private void initialize() {
+
 		frmBrainchat = new JFrame();
 		frmBrainchat.setTitle("BrainChat | "+ChatClient.Version);
 		frmBrainchat.setResizable(false);
@@ -43,13 +55,15 @@ public class MainFrame {
 		MessageField = new JTextField();
 		MessageField.setColumns(10);
 		
-		JButton SendButton = new JButton("Отправить");
+		SendButton = new JButton("Отправить");
+		SendButton.addActionListener(new SendButtonListener());
 		
-		JButton NewRoomButton = new JButton("Создать комнату");
+		NewRoomButton = new JButton("Создать комнату");
 		
-		JButton ConnectButton = new JButton("Подключиться");
+		ConnectButton = new JButton("Подключиться");
 		
-		JButton SettingsButton = new JButton("Настройки");
+		SettingsButton = new JButton("Настройки");
+
 		GroupLayout groupLayout = new GroupLayout(frmBrainchat.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -86,7 +100,7 @@ public class MainFrame {
 					.addContainerGap())
 		);
 		
-		JTextArea GeneralChatArea = new JTextArea();
+		GeneralChatArea = new JTextArea();
 		GeneralChatArea.setEditable(false);
 		scrollPane.setViewportView(GeneralChatArea);
 		frmBrainchat.getContentPane().setLayout(groupLayout);
@@ -96,5 +110,12 @@ public class MainFrame {
 	public static void Close(){
 		frmBrainchat.setVisible(false);
 		System.exit(0);
+	}
+
+	public static class SendButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+
+			redy_to_send = true;
+		}
 	}
 }

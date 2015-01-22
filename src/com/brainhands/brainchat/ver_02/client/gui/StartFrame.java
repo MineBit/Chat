@@ -149,6 +149,7 @@ public class StartFrame extends JFrame {
                 if (is_auth_correct){
                     Close();
                     MainFrame.View();
+
                 }else JOptionPane.showMessageDialog(null,"Неправильный логин или пароль!","Ошибка!",JOptionPane.ERROR_MESSAGE);
             }
         }

@@ -2,6 +2,7 @@ package com.brainhands.brainchat.ver_02.client;
 
 import com.brainhands.brainchat.utill.Crypto;
 import com.brainhands.brainchat.utill.MathUtill;
+import com.brainhands.brainchat.ver_02.client.gui.MainFrame;
 import com.brainhands.brainchat.ver_02.client.gui.StartFrame;
 
 import javax.swing.*;
@@ -24,7 +25,7 @@ public class ChatClient {
 	public static String nickname = null; //Дефолтное значение для имени пользователя
 	public static String host = "127.0.0.1"; //Дефолтное значение хоста TODO перед выпуском заменить на ip сервера
 	public static int user_personal_id = MathUtill.GetRandom(10000000,99999999); //Персональнальный индификационный номер клиента, генерируется заново при каждом новом запуске программы
-
+	public static boolean is_general_chat_work = false;
 	final Socket s;
 	static BufferedReader socketReader; //Буферизированный читатель с сервера
 	static BufferedWriter socketWriter; //Буферизированный писатель на сервер
@@ -58,12 +59,15 @@ public class ChatClient {
 	//Метод, где происходит отправка сообщений на сервер:
 	public void run(String toSend) {
 		while (true) {
-			String userString = null;
 			if (toSend == null || toSend.length() == 0 || s.isClosed()) {
 				close(); // ...закрываем коннект.
 				break; // до этого break мы не дойдем, но стоит он, чтобы компилятор не ругался
 			} else {
 				try {
+					if (MainFrame.redy_to_send){
+						toSend = user_personal_id+"@"+nickname+"@2@2@"+MainFrame.MessageField.getText();
+						MainFrame.redy_to_send = false;
+					}
 					String Crypted_String = Crypto.Cripting(toSend);
 					socketWriter.write(Crypted_String); //пишем строку пользователя
 					socketWriter.write("\n"); //добавляем "новою строку", дабы readLine() сервера сработал
@@ -113,8 +117,10 @@ public class ChatClient {
 				} else { // иначе печатаем то, что прислал серверa
 					System.out.println("Принято с сервера:" + Crypto.Recripting(line));
 					String[] parsed = Crypto.Recripting(line).split("@");
-					if (Integer.parseInt(parsed[0]) == user_personal_id && nickname.equals(parsed[1])){
-						switch (Integer.parseInt(parsed[2])){
+					if(is_general_chat_work && Integer.parseInt(parsed[2]) == 2) {
+						MainFrame.GeneralChatArea.append(Crypto.Recripting(parsed[3]));
+					}if(is_general_chat_work == false && Integer.parseInt(parsed[2]) != 2 && Integer.parseInt(parsed[0]) == user_personal_id && nickname.equals(parsed[1])){
+						switch (Integer.parseInt(parsed[2])) {
 							case 0:
 								FromServerStrings.string_from_code_0 = null;
 								FromServerStrings.string_from_code_0 = Crypto.Recripting(line);
