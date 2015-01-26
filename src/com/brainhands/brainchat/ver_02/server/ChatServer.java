@@ -96,20 +96,6 @@ public class ChatServer {
 	 * @param args
 	 * @throws java.io.IOException
 	 */
-
-	public static void main(String[] args) throws IOException {
-		//TODO Написать выбор (первая загрузка-непервая загрузка) чтобы не плодились ферсты
-		System.out.println("Brain Chat Sever |0.2| by Brain Hands");
-		Files.MakeDir("BrainChatServerFiles");
-		Files.Write(Crypto.Cripting("First:1"),"BrainChatServerFiles/users.bbf");
-		String[] users = Files.Read("BrainChatServerFiles/users.bbf");
-		if(users.length == 0){
-			System.out.println("База данных пуста!");
-		}else System.out.println("Количество зарегистрированных пользователей: "+users.length);
-		new ChatServer(45000).run(); // если сервер не создался, программа
-		// вылетит по эксепшену, и метод run() не запуститься
-	}
-
 	/**
 	 * вложенный класс асинхронной обработки одного коннекта.
 	 */
@@ -160,7 +146,7 @@ public class ChatServer {
 				}
 			}
 		}
-
+  
 		/**
 		 * Метод посылает в сокет полученную строку
 		 * @param line строка на отсылку
@@ -189,7 +175,7 @@ public class ChatServer {
 						send_to_user = str[0]+"@"+str[1]+"@"+str[2]+"@1";
 					}
 					break;
-				case 1:
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        				case 1:
 					//Если пришел запрос с кодом регистрации:
 					boolean is_password_correct = false;
 					for (int i = 0; i < parsed_users_file.length; i++){

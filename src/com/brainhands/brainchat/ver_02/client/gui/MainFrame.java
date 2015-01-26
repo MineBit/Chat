@@ -2,6 +2,7 @@ package com.brainhands.brainchat.ver_02.client.gui;
 
 import com.brainhands.brainchat.utill.Other;
 import com.brainhands.brainchat.ver_02.client.ChatClient;
+import com.brainhands.brainchat.ver_02.server.MainChatThread;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -29,9 +30,10 @@ public class MainFrame {
 			public void run(){
 				new MainFrame();
 				MainFrame.frmBrainchat.setVisible(true);
-				ChatClient.SendToServer(ChatClient.user_personal_id+"@"+ChatClient.nickname+"@2@1");
+
 			}
 		});
+		StartMainChatThread();
 	}
 
 	public MainFrame() {
@@ -117,5 +119,11 @@ public class MainFrame {
 
 			redy_to_send = true;
 		}
+	}
+
+	static void StartMainChatThread(){
+		MainChatThread  MCT = new MainChatThread();
+		Thread main_chat_thread = new Thread(MCT);
+		main_chat_thread.start();
 	}
 }
