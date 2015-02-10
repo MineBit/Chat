@@ -8,7 +8,7 @@ import java.io.IOException;
 public class MainChatThread implements Runnable {
     public void run(){
         try {
-            new MainChat(ChatClient.host, 44999).run();
+            new MainChat(ChatClient.host, 9999).run();
         } catch (IOException e) {
             e.printStackTrace();
         }

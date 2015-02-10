@@ -16,7 +16,7 @@ public class MainChat {
     final BufferedWriter socketWriter;
 
     public MainChat(String host, int port) throws IOException {
-        s = new Socket(host, port);
+        s = new Socket(host, 9999);
 
         socketReader = new BufferedReader(new InputStreamReader(s.getInputStream(), "UTF-8"));
         socketWriter = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"));

@@ -20,8 +20,8 @@ public class GeneralChatServer {
     BlockingQueue<SocketProcessor> q = new LinkedBlockingQueue<SocketProcessor>();
 
     public  GeneralChatServer(int port) throws IOException{
-        ss = new ServerSocket(port);
-        this.port = port;
+        ss = new ServerSocket(9999);
+        this.port = 9999;
     }
 
     void run(){
