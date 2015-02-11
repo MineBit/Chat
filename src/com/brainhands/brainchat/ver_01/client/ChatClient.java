@@ -18,7 +18,9 @@ public class ChatClient {
 	final Socket s; // это будет сокет для сервера
 	final BufferedReader socketReader; // буферизированный читатель с сервера
 	final BufferedWriter socketWriter; // буферизированный писатель на сервер
-	final BufferedReader userInput; // буферизированный читатель пользовательского ввода с консоли
+	final BufferedReader userInput; // буферизированный читатель пользовательского ввода с консоли]
+
+    static boolean is_joined = false;
 	
 	public static String nickname = "User";
 	public static String host = "127.0.0.1";
@@ -50,7 +52,12 @@ public class ChatClient {
 		while (true) {
 			String userString = null;
 			try {
-				userString = userInput.readLine(); // читаем строку от пользователя
+                if (is_joined == false){
+                    userString = "Пользователь "+nickname+" подключился!";
+                    is_joined = true;
+                }else{
+                    userString = userInput.readLine(); // читаем строку от пользователя
+                }
 			} catch (IOException ignored) {} // с консоли эксепшена не может быть в принципе, игнорируем
 			//если что-то не так или пользователь просто нажал Enter...
 			if (userString == null || userString.length() == 0 || s.isClosed()) {
@@ -76,6 +83,7 @@ public class ChatClient {
 	public synchronized void close() {//метод синхронизирован, чтобы исключить двойное закрытие.
 		if (!s.isClosed()) { // проверяем, что сокет не закрыт...
 			try {
+
 				s.close(); // закрываем...
 				System.exit(0); // выходим!
 			} catch (IOException ignored) {
