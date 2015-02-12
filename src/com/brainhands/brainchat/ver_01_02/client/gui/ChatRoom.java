@@ -1,4 +1,4 @@
-package com.brainhands.brainchat.ver_02.client.gui;
+package com.brainhands.brainchat.ver_01_02.client.gui;
 
 import javax.swing.*;
 import java.awt.*;
