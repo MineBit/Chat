@@ -5,20 +5,20 @@ package com.brainhands.brainchat.ver_01_02.client;
  */
 
 import com.brainhands.brainchat.utill.Crypto;
+import com.brainhands.brainchat.ver_01_02.client.gui.ChatRoom;
 
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 
 /**
  * Класс-клиент чат-сервера. Работает в консоли. Командой с консоли shutdown посылаем сервер в оффлайн
  */
 
 public class ChatClient {
-    final public static String Version = "0.1.2S";
-    final public static String BuilDVersion = "0033";
+    final public static String Version = "0.1.2G";
+    final public static String BuilDVersion = "0045";
     final Socket s; // это будет сокет для сервера
     final BufferedReader socketReader; // буферизированный читатель с сервера
     final BufferedWriter socketWriter; // буферизированный писатель на сервер
@@ -26,7 +26,6 @@ public class ChatClient {
 
     static boolean is_joined = false;
 
-    public static String nickname = "User";
     public static String host = "127.0.0.1";
 
     /**
@@ -52,31 +51,31 @@ public class ChatClient {
      */
 
     public void run() {
-        System.out.println("Write for send (For exit press Enter):");
         while (true) {
-            String userString = null;
-            try {
-                if (is_joined == false){
-                    userString = "Пользователь "+nickname+" подключился!";
-                    is_joined = true;
-                }else{
-                    userString = userInput.readLine(); // читаем строку от пользователя
-                }
-            } catch (IOException ignored) {} // с консоли эксепшена не может быть в принципе, игнорируем
-            //если что-то не так или пользователь просто нажал Enter...
-            if (userString == null || userString.length() == 0 || s.isClosed()) {
-                close(); // ...закрываем коннект.
-                break; // до этого break мы не дойдем, но стоит он, чтобы компилятор не ругался
-            } else { //...иначе...
-                try {
-                    String Crypted_String = Crypto.Cripting("[" + get_time() + "] " + nickname + ": " + userString);
-                    socketWriter.write(Crypted_String); //пишем строку пользователя
-                    socketWriter.write("\n"); //добавляем "новою строку", дабы readLine() сервера сработал
-                    socketWriter.flush(); // отправляем
-                } catch (IOException e) {
-                    close(); // в любой ошибке - закрываем.
+            if (ChatRoom.redy_to_send == true) {
+                String userString = null;
+                    if (is_joined == false) {
+                        userString = "Пользователь " + User.nickname + " подключился!";
+                        is_joined = true;
+                    } else {
+                        userString = ChatRoom.message; // читаем строку от пользователя
+                    }
+                //если что-то не так или пользователь просто нажал Enter...
+                if (userString == null || userString.length() == 0 || s.isClosed()) {
+                    close(); // ...закрываем коннект.
+                    break; // до этого break мы не дойдем, но стоит он, чтобы компилятор не ругался
+                } else { //...иначе...
+                    try {
+                        String Crypted_String = Crypto.Cripting("[" + get_time() + "] " + User.nickname + ": " + userString);
+                        socketWriter.write(Crypted_String); //пишем строку пользователя
+                        socketWriter.write("\n"); //добавляем "новою строку", дабы readLine() сервера сработал
+                        socketWriter.flush(); // отправляем
+                    } catch (IOException e) {
+                        close(); // в любой ошибке - закрываем.
+                    }
                 }
             }
+            ChatRoom.redy_to_send = false;
         }
     }
     /**
@@ -93,33 +92,6 @@ public class ChatClient {
             } catch (IOException ignored) {
                 ignored.printStackTrace();
             }
-        }
-    }
-
-    public static void main(String[] args) { // входная точка программы
-        System.out.println("Brain Chat | "+Version+"| by Brain Hands");
-        System.out.println("Build: " + BuilDVersion);
-        System.out.println("Welcome to Chat!");
-        System.out.println("Enter your nickname:");
-
-        @SuppressWarnings("resource")
-        Scanner input = new Scanner(System.in);
-        nickname = input.next();
-
-        System.out.println("Use default server [1], or use server ip[2]?");
-        @SuppressWarnings("resource")
-        Scanner input2 = new Scanner(System.in);
-        String in_string = input2.next();
-        if(Integer.parseInt(in_string) == 2){
-            System.out.println("Type server ip:");
-            @SuppressWarnings("resource")
-            Scanner input3 = new Scanner(System.in);
-            host = input3.next();
-        }
-        try {
-            new ChatClient(host, 45000).run(); // Пробуем приконнетиться...
-        } catch (IOException e) { // если объект не создан...
-            System.out.println("Connected Error!"); // сообщаем...
         }
     }
 
@@ -150,7 +122,7 @@ public class ChatClient {
                     System.out.println("Server close connection!");
                     close(); // ...закрываемся
                 } else { // иначе печатаем то, что прислал сервер.
-                    System.out.println(">>" + Crypto.Recripting(line));
+                    ChatRoom.MessageArea.append(">>" + Crypto.Recripting(line)+"\n");
                 }
             }
         }
@@ -161,5 +133,15 @@ public class ChatClient {
         SimpleDateFormat format = new SimpleDateFormat("hh:mm");
         String returner = format.format(d);
         return returner;
+    }
+
+    public static class Connection implements Runnable{
+        public void run() {
+            try {
+                new ChatClient(host, 45000).run(); // Пробуем приконнетиться...
+            } catch (IOException e) { // если объект не создан...
+                System.out.println("Connected Error!"); // сообщаем...
+            }
+        }
     }
 }
