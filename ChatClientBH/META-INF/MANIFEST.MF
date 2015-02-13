@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: .
+Main-Class: ru.gusev_pavel.chat.SimpleChatClient
+

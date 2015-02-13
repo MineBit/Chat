@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: .
+Main-Class: ru.gusev.pavel.chat.v_0_0_2_5.ChatServer
+

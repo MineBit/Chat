@@ -73,7 +73,7 @@ public class ChatRoom {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 500, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JLabel lblNewLabel = new JLabel("Brain Chat | Version: "+ChatClient.Version);
@@ -87,10 +87,7 @@ public class ChatRoom {
 		panel.add(textField);
 		textField.setColumns(35);
 
-        SendButton = new JButton("Отправить");
-        SendButton.addActionListener(new SendButtonListener());
-        panel.add(SendButton);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -98,6 +95,10 @@ public class ChatRoom {
 
         MessageArea = new JTextArea();
 		scrollPane.setViewportView(MessageArea);
+
+        SendButton = new JButton("Отправить");
+        SendButton.addActionListener(new SendButtonListener());
+        panel.add(SendButton);
 	}
 
     static class SendButtonListener implements ActionListener{
