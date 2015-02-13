@@ -13,15 +13,19 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 
 public class ChatServer {
     ArrayList ClientOutputStreams;
+
     public static int SocketNum;
+
     public static int ID = 0;
-    public static String Tittle = "Brain Hands Chat | 0.0.2.5";
+    public static String Tittle = "BrainChatServer | 0.0.2.5";
     public static String SocketAsk;
     String FileDir = "/logs/l";
     JFrame GFrame;
@@ -33,6 +37,8 @@ public class ChatServer {
     JButton Stop;
     public InetAddress ServerIP;
     Client[] client = new Client[10000];
+
+    public static int server_port = 5000;
 
     ChatServer(String tittle, int w, int h) {
         this.GFrame = new JFrame(tittle);
@@ -72,6 +78,7 @@ public class ChatServer {
     }
 
     public static void main(String[] args) {
+
         SocketAsk = JOptionPane.showInputDialog((Component)null, "Введите номер порта, на котором запуститься сервер чата:", Tittle, 1);
         if(SocketAsk == null) {
             JOptionPane.showMessageDialog((Component)null, "Error! Server set default port(5000)!", Tittle, 1);
@@ -198,4 +205,22 @@ public class ChatServer {
             System.exit(0);
         }
     }
+
+    public static void ConsolePrint(String to_print){
+        System.out.println(to_print);
+    }
+
+    //Метод для записи логов. Выводит логи в консоль
+    //TODO Сделать вывод логов в файл, но так, чтобы в логах не было сообщений
+    public static void LogPrint(String log_to_print){
+        System.out.println("[PROG_LOG] - ("+get_time()+") >>"+log_to_print);
+    }
+
+    public static String get_time(){
+        Date d = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+        String returner = format.format(d);
+        return returner;
+    }
+
 }
